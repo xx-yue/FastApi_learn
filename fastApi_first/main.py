@@ -9,3 +9,9 @@ async def root():
 async def get_hello():
     return {"msg":"get_hello"}
 
+@app.get('/book/{id}')
+async def get_book(id: int):
+    return  {
+        "id":id,
+        "msg":"get_book"
+    }
