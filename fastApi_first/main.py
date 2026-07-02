@@ -1,5 +1,5 @@
 from fastapi import FastAPI,Path,Query;
-
+from pydantic import BaseModel,Field;
 app = FastAPI()
 
 @app.get("/")
@@ -37,6 +37,20 @@ async def get_news_news(
         "skip":skip,
         "limit":limit,
         "msg":"get_news_news"
+    }
+
+
+#08 请求体和响应体
+# 请求体
+class User(BaseModel):
+    username:str = Field(...,min_length=2,max_length=10 ,description="用户名")
+    password:str = Field(...,min_length=2,max_length=10,description="密码")
+
+@app.post('/user/register')
+async def user_register(user:User):
+    return {
+        "user":user,
+        "msg":"user_register"
     }
 
 
