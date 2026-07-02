@@ -76,3 +76,17 @@ async def get_html():
 async def get_file():
     path = './img/1.png'
     return FileResponse(path,filename='1.png')
+
+#13自定义响应式数据格式
+class News(BaseModel):
+    id:int
+    title:str
+    content:str
+
+@app.get('/news/{id}',response_model=News)
+async def get_news(id:int):
+    return {
+        "id":id,
+        "title":"title",
+        "content":"content"
+    }
