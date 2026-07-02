@@ -1,5 +1,6 @@
 from fastapi import FastAPI,Path,Query;
 from pydantic import BaseModel,Field;
+from fastapi.responses import HTMLResponse;
 app = FastAPI()
 
 @app.get("/")
@@ -28,7 +29,7 @@ async def get_author(name: str=Path(...,min_length=2,max_length=10,description="
 
 
 # 查询参数 ， -》分页 ，limit： 返回记录数 10
-@app.get('/news/newws_list')
+@app.get('/news/news_list')
 async def get_news_news(
         skip:int = Query(0,gt=0,description="跳过记录数"),
         limit:int =10
@@ -53,6 +54,16 @@ async def user_register(user:User):
         "msg":"user_register"
     }
 
-
-
-
+# 11 Html返回类型
+@app.get('/html',response_class=HTMLResponse)
+async def get_html():
+    return """
+    <html>
+        <head>
+            <title>FastAPI</title>
+        </head>
+        <body>
+            <h1>FastAPI</h1>
+        </body>
+    </html>
+    """
