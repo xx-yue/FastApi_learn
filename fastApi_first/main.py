@@ -1,6 +1,8 @@
 from fastapi import FastAPI,Path,Query;
 from pydantic import BaseModel,Field;
 from fastapi.responses import HTMLResponse;
+from fastapi.responses import FileResponse;
+
 app = FastAPI()
 
 @app.get("/")
@@ -67,3 +69,10 @@ async def get_html():
         </body>
     </html>
     """
+
+
+#12  响应文件类型
+@app.get('/file',response_class=FileResponse)
+async def get_file():
+    path = './img/1.png'
+    return FileResponse(path,filename='1.png')
