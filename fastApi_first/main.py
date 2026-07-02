@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Path;
+from fastapi import FastAPI,Path,Query;
 
 app = FastAPI()
 
@@ -25,5 +25,20 @@ async def get_author(name: str=Path(...,min_length=2,max_length=10,description="
         "name":name,
         "msg":"get_author"
     }
+
+
+# 查询参数 ， -》分页 ，limit： 返回记录数 10
+@app.get('/news/newws_list')
+async def get_news_news(
+        skip:int = Query(0,gt=0,description="跳过记录数"),
+        limit:int =10
+):
+    return {
+        "skip":skip,
+        "limit":limit,
+        "msg":"get_news_news"
+    }
+
+
 
 
