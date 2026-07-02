@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Path,Query;
+from fastapi import FastAPI,Path,Query,HTTPException;
 from pydantic import BaseModel,Field;
 from fastapi.responses import HTMLResponse;
 from fastapi.responses import FileResponse;
@@ -85,6 +85,17 @@ class News(BaseModel):
 
 @app.get('/news/{id}',response_model=News)
 async def get_news(id:int):
+    return {
+        "id":id,
+        "title":"title",
+        "content":"content"
+    }
+
+#14 异常处理
+@app.get('/news/{id}')
+async def get_news(id:int):
+    if id == 1:
+        raise HTTPException(status_code=404,detail="id不能为1")
     return {
         "id":id,
         "title":"title",
