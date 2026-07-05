@@ -101,3 +101,5 @@ async def get_news(id:int):
         "title":"title",
         "content":"content"
     }
+
+
