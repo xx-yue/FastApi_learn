@@ -8,13 +8,14 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 # 加载 .env 文件（向上找到项目根目录的 .env）
-load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 app = FastAPI()
 
 
 # 1. 创建异步引擎
-ASYNC_DATABASE_URL='mysql+aiomysql://root:o88o88@localhost:3306/fast_first?charset=utf8mb4'
+# ASYNC_DATABASE_URL='mysql+aiomysql://root:o88o88@localhost:3306/fast_first?charset=utf8mb4'
+ASYNC_DATABASE_URL=os.getenv("ASYNC_DATABASE_URL")
 async_engine = create_async_engine(
     ASYNC_DATABASE_URL,
     echo=True,  # 可选，输出 SQL 日志
