@@ -58,3 +58,40 @@ async def create_tables():
 @app.get("/")
 async def root():
     return {"message": os.getenv("ASYNC_DATABASE_URL")}
+
+
+
+AsyncSessionLocal = async_sessionmaker(
+    bind=async_engine,  # 绑定数据库引擎
+    class_=AsyncSession,  # 指定会话类
+    expire_on_commit=False  # 提交后会话不过期，不会重新查询数据库
+)
+
+
+# 依赖项
+async def get_database():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session  # 返回数据库会话给路由处理函数
+            await session.commit()  # 提交事务
+        except Exception:
+            await session.rollback()  # 有异常，回滚
+            raise
+        finally:
+            await session.close()  # 关闭会话
+
+
+# 需求：路径参数 书籍id
+@app.get("/book/get_book/{book_id}")
+async def get_book_list(book_id: int, db: AsyncSession = Depends(get_database)):
+    result = await db.execute(select(Book).where(Book.id == book_id))
+    book = result.scalar_one_or_none()
+    return book
+
+
+# 需求：条件 价格大于等于200
+@app.get("/book/search_book")
+async def get_search_book(db: AsyncSession = Depends(get_database)):
+    result = await db.execute(select(Book).where(Book.price >= 200))
+    books = result.scalars().all()
+    return books
