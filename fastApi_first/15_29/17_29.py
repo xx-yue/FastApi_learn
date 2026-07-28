@@ -102,3 +102,21 @@ async def get_search_book(db: AsyncSession = Depends(get_database)):
     result = await db.execute(select(Book).where(Book.price >= 200))
     books = result.scalars().all()
     return books
+
+
+
+@app.get("/book/search_book")
+async def get_search_book(db: AsyncSession = Depends(get_database)):
+    # 需求： 作者以 曹 开头  % _
+    # like() 模糊查询： % 任意个字符；_ 一个单个字符
+    # result = await db.execute(select(Book).where(Book.author.like("曹_")))
+
+    # & | ~ 与非
+    # result = await db.execute(select(Book).where((Book.author.like("曹%")) | (Book.price > 100)))
+
+    # in_() 包含
+    # 需求：书籍id列表，数据库里面的 id 如果在 书籍id列表里面 就返回
+    id_list = [1, 3, 5, 7]
+    result = await db.execute(select(Book).where(Book.id.in_(id_list)))
+    book = result.scalars().all()
+    return book
