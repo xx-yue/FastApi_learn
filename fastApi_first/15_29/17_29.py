@@ -80,6 +80,13 @@ async def get_database():
         finally:
             await session.close()  # 关闭会话
 
+@app.get("/book/books")
+async def get_book_list(db: AsyncSession = Depends(get_database)):
+    # result = await db.execute(select(Book))  # 查询 → 返回一个 ORM 对象
+    # book = result.scalars().all()  # 获取所有
+    # book = result.scalars().first()  # 获取第一个
+    book = await db.get(Book, 5)  # 获取单条数据 → 根据主键
+    return book
 
 # 需求：路径参数 书籍id
 @app.get("/book/get_book/{book_id}")
