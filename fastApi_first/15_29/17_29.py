@@ -122,6 +122,7 @@ async def get_search_book(db: AsyncSession = Depends(get_database)):
     return book
 
 
+#23 聚合函数
 @app.get("/book/count")
 async def get_count(db: AsyncSession = Depends(get_database)):
     # 聚合查询 select( func.方法名(模型类.属性) )
@@ -131,3 +132,20 @@ async def get_count(db: AsyncSession = Depends(get_database)):
     result = await db.execute(select(func.avg(Book.price)))
     num = result.scalar()  # 用来提取一个数值 → 标量值
     return num
+
+
+# 24分页查询
+@app.get("/book/get_book_list")
+async def get_book_list(
+    page: int = 1,
+    page_size: int = 3,
+    db: AsyncSession = Depends(get_database)
+):
+    # （页码 - 1） * 每页数量
+    skip = (page - 1) * page_size
+
+    # offset 跳过的记录数  ； limit 每页的记录数
+    stmt = select(Book).offset(skip).limit(page_size)
+    result = await db.execute(stmt)
+    books = result.scalars().all()
+    return books
