@@ -120,3 +120,14 @@ async def get_search_book(db: AsyncSession = Depends(get_database)):
     result = await db.execute(select(Book).where(Book.id.in_(id_list)))
     book = result.scalars().all()
     return book
+
+
+@app.get("/book/count")
+async def get_count(db: AsyncSession = Depends(get_database)):
+    # 聚合查询 select( func.方法名(模型类.属性) )
+    # result = await db.execute(select(func.count(Book.id)))
+    # result = await db.execute(select(func.max(Book.price)))
+    # result = await db.execute(select(func.sum(Book.price)))
+    result = await db.execute(select(func.avg(Book.price)))
+    num = result.scalar()  # 用来提取一个数值 → 标量值
+    return num
