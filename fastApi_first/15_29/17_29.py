@@ -6,6 +6,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy import DateTime, func, String, Float, select
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from pydantic import BaseModel
 
 # 加载 .env 文件（向上找到项目根目录的 .env）
 load_dotenv(Path(__file__).parent.parent / ".env")
@@ -149,3 +150,22 @@ async def get_book_list(
     result = await db.execute(stmt)
     books = result.scalars().all()
     return books
+
+
+# 需求：用户输入图书信息（id、书名、作者、价格、出版社） → 新增
+# 用户输入 → 参数 → 请求体
+class BookBase(BaseModel):
+    id: int
+    bookname: str
+    author: str
+    price: float
+    publisher: str
+
+
+@app.post("/book/add_book")
+async def add_book(book: BookBase, db: AsyncSession = Depends(get_database)):
+    # ORM对象 → add → commit
+    book_obj = Book(**book.__dict__)
+    db.add(book_obj)
+    await db.commit()
+    return book
