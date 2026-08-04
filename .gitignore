@@ -8,3 +8,6 @@ __pycache__/
 
 # Environment variables
 .env
+
+.vscode
+__node_modules__/
