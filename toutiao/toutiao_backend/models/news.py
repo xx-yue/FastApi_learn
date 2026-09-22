@@ -50,5 +50,7 @@ class News(Base):
     views: Mapped[int] = mapped_column(Integer, default=0, nullable=False, comment="浏览量")
     publish_time: Mapped[datetime] = mapped_column(DateTime, default=datetime.now, comment="发布时间")
 
+
     def __repr__(self):
+        #
         return f"<News(id={self.id}, title='{self.title}', views={self.views})>"

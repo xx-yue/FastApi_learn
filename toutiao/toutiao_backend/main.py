@@ -12,10 +12,15 @@ app.add_middleware(
     allow_headers=["*"],     # 允许的请求头
 )
 
-
+# 根路由
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 # 挂载路由/注册路由
 app.include_router(news.router)
+
+# 启动
+# conda activate web_learn
+# cd D:\app4\GitHub\FastApi_learn\toutiao\toutiao_backend
+# uvicorn main:app --reload --host 127.0.0.1 --port 8000
