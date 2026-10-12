@@ -1,10 +1,15 @@
 from fastapi import FastAPI
-from routers import news
+from routers import news, users
 from fastapi.middleware.cors import CORSMiddleware
+
+# from utils.exception_handlers import register_exception_handlers
 
 app = FastAPI()
 
-# 跨域
+# 注册异常处理器
+# register_exception_handlers(app)
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],     # 允许的源，开发阶段允许所有源，生产环境需要指定源
@@ -13,13 +18,15 @@ app.add_middleware(
     allow_headers=["*"],     # 允许的请求头
 )
 
-# 根路由
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 # 挂载路由/注册路由
 app.include_router(news.router)
+app.include_router(users.router)
+
 
 # 启动
 # conda activate web_learn
